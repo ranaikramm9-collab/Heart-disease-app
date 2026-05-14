@@ -1,9 +1,4 @@
 import streamlit as st
-
-st.set_page_config(page_title="Heart Disease Predictor")
-
-st.write("App Loaded Successfully")
-'''import streamlit as st
 import numpy as np
 import joblib
 
