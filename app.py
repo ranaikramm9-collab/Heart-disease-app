@@ -50,7 +50,7 @@ This system predicts whether a person may have a **risk of heart disease**.
 
 - **Age** → Age in years  
 - **Gender** → Male or Female  
-- **Chest Pain Type** → Type of chest pain (0–3)  
+- **Chest Pain Type** → Type of chest pain  
 - **Blood Pressure** → BP level  
 - **Cholesterol** → Cholesterol level in blood  
 - **Fasting Blood Sugar** → Above 120 or not  
@@ -75,6 +75,7 @@ This system predicts whether a person may have a **risk of heart disease**.
 # =========================
 st.subheader("📝 Enter Patient Details")
 
+# Age
 Age = st.number_input(
     "Age (Years)",
     min_value=1,
@@ -82,6 +83,7 @@ Age = st.number_input(
     value=25
 )
 
+# Gender
 Sex = st.selectbox(
     "Gender",
     ["Female", "Male"]
@@ -89,67 +91,146 @@ Sex = st.selectbox(
 
 Sex = 0 if Sex == "Female" else 1
 
-ChestPain = st.selectbox(
+# Chest Pain Type
+ChestPain_option = st.selectbox(
     "Chest Pain Type",
-    [0, 1, 2, 3]
+    [
+        "Typical Angina",
+        "Atypical Angina",
+        "Non-Anginal Pain",
+        "Asymptomatic"
+    ]
 )
 
+ChestPain_mapping = {
+    "Typical Angina": 0,
+    "Atypical Angina": 1,
+    "Non-Anginal Pain": 2,
+    "Asymptomatic": 3
+}
+
+ChestPain = ChestPain_mapping[ChestPain_option]
+
+# Blood Pressure
 BP = st.number_input(
     "Blood Pressure (BP)",
     min_value=0.0,
     value=120.0
 )
 
+# Cholesterol
 Cholesterol = st.number_input(
     "Cholesterol Level",
     min_value=0.0,
     value=200.0
 )
 
+# Fasting Blood Sugar
 FBS = st.selectbox(
-    "Fasting Blood Sugar > 120",
-    [0, 1]
+    "Fasting Blood Sugar Above 120?",
+    ["No", "Yes"]
 )
 
-EKG = st.selectbox(
+FBS = 0 if FBS == "No" else 1
+
+# EKG Results
+EKG_option = st.selectbox(
     "EKG Results",
-    [0, 1, 2]
+    [
+        "Normal",
+        "Minor Abnormality",
+        "Major Abnormality"
+    ]
 )
 
+EKG_mapping = {
+    "Normal": 0,
+    "Minor Abnormality": 1,
+    "Major Abnormality": 2
+}
+
+EKG = EKG_mapping[EKG_option]
+
+# Maximum Heart Rate
 MaxHR = st.number_input(
     "Maximum Heart Rate",
     min_value=0.0,
     value=150.0
 )
 
+# Exercise Angina
 ExerciseAngina = st.selectbox(
-    "Exercise-Induced Angina",
-    [0, 1]
+    "Chest Pain During Exercise?",
+    ["No", "Yes"]
 )
 
+ExerciseAngina = 0 if ExerciseAngina == "No" else 1
+
+# ST Depression
 STDepression = st.number_input(
     "ST Depression",
     min_value=0.0,
     value=1.0
 )
 
-Slope = st.selectbox(
+# Slope
+Slope_option = st.selectbox(
     "Slope of ST Segment",
-    [0, 1, 2]
+    [
+        "Upsloping",
+        "Flat",
+        "Downsloping"
+    ]
 )
 
-Vessels = st.selectbox(
+Slope_mapping = {
+    "Upsloping": 0,
+    "Flat": 1,
+    "Downsloping": 2
+}
+
+Slope = Slope_mapping[Slope_option]
+
+# Vessels
+Vessels_option = st.selectbox(
     "Number of Major Vessels",
-    [0, 1, 2, 3]
+    [
+        "0 Vessels",
+        "1 Vessel",
+        "2 Vessels",
+        "3 Vessels"
+    ]
 )
 
-Thallium = st.selectbox(
+Vessels_mapping = {
+    "0 Vessels": 0,
+    "1 Vessel": 1,
+    "2 Vessels": 2,
+    "3 Vessels": 3
+}
+
+Vessels = Vessels_mapping[Vessels_option]
+
+# Thallium
+Thallium_option = st.selectbox(
     "Thallium Test Result",
-    [3, 6, 7]
+    [
+        "Normal",
+        "Fixed Defect",
+        "Reversible Defect"
+    ]
 )
+
+Thallium_mapping = {
+    "Normal": 3,
+    "Fixed Defect": 6,
+    "Reversible Defect": 7
+}
+
+Thallium = Thallium_mapping[Thallium_option]
 
 # =========================
-# Prediction Button
+# Prediction
 # =========================
 if st.button("🔍 Predict Heart Disease"):
 
@@ -180,7 +261,7 @@ if st.button("🔍 Predict Heart Disease"):
     else:
         st.success("💚 Low Risk of Heart Disease")
 
-    # Probability (if supported)
+    # Probability
     if hasattr(model, "predict_proba"):
 
         probability = model.predict_proba(input_data)[0][1]
